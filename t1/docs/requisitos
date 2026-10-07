@@ -1,0 +1,42 @@
+# Descrição do trabalho
+
+Desenvolver um programa em linguagem assembly para o processador MIPS, para criptografar e descriptografar arquivos de texto.
+
+O programa deverá apresentar uma interface via terminal que permita:
+1. Solicitar ao usuário a opção desejada: 
+- (1) Criptografar 
+- (2) Descriptografar um arquivo
+
+2. Solicitar os nomes de arquivos:
+- Para criptografia: solicitar o nome do arquivo de entrada (texto claro) e o nome do arquivo de saída (texto cifrado).
+- Para descriptografia: solicitar o nome do arquivo de entrada (texto cifrado) e o nome do arquivo de saída (texto decifrado).
+
+3. Solicitar uma chave/senha de acesso. Durante a digitação, os caracteres da senha não devem ser exibidos abertamente, devendo ser ecoados no terminal como asteriscos (’*’).
+
+4. Executar o processo de criptografia ou descriptografia do arquivo selecionado.
+Cada equipe implementará apenas um algoritmo criptográfico: RC4(Rivest Cipher 4) ou
+S-AES (Simplifed Advanced Encryption Standard). O algoritmo a ser implementado será
+definido pela regra:
+1. Somam-se os dois últimos dígitos do número de matrícula de cada participante.
+2. Se a soma total for par, a equipe implementará o RC4.
+3. Se a soma total for ímpar, a equipe implementará o S-AES.
+
+Para testes e validação, serão fornecidos pelo professor dois arquivos: texto1.txt e texto2.txt. O programa deverá ser testado realizando a criptografia destes arquivos utilizando a chave ELC1011, gerando os arquivos cifrados secreto1.rc4 (ou .aes) e secreto2.rc4 (ou .aes). A equipe deverá descriptografá-los para teste1.txt e teste2.txt, verificando a integridade do conteúdo original.
+
+Deverá ser enviado pelo Moodle um arquivo compactado (.zip) contendo:
+1. O relatório do trabalho em formato PDF.
+2. Todos os arquivos de código-fonte (.asm) comentados e necessários para execução no simulador MARS.
+
+O relatório deve conter as seções: Introdução, Objetivos, Referencial Teórico, Metodologia, Experimentos e Resultados, Discussão, Conclusões e Perspectivas. Todos os arquivos para a execução deverão ser entregues, para que o professor possa executar e avaliar o código no programa MARS. Em caso de dúvidas na avaliação, a equipe poderá ser chamada para uma arguição sobre a implementação.
+O professor acompanhará e auxiliará os alunos no desenvolvimento do simulador e realizará atividades em sala de aula para auxiliar a execução do trabalho. Um documento de ajuda será mantido com as perguntas e respostas frequentes (FAQ2) e será atualizado ao longo da execução do trabalho. Em caso de dúvidas não contempladas no FAQ, entre em contato com o professor.
+
+# Algoritmo criptográfico selecionado
+
+- Miguel: 202312172
+- Lucas: 202311993
+- Soma: 72 + 93 = 165 (Ímpar)
+- Algoritmo: S-AES
+
+# Opcional
+
+- O topico 3 onde diz "Solicitar uma chave/senha de acesso. Durante a digitação, os caracteres da senha não devem ser exibidos abertamente, devendo ser ecoados no terminal como asteriscos (’*’)." é opcional, então não implemente.
