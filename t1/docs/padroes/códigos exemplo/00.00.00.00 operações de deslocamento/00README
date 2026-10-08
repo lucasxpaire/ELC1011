@@ -1,0 +1,4 @@
+ 
+00README
+ex-000-079.asm              operações de deslocamento para multiplicar e dividir um número sem sinal por 2^(n)
+ex-000-080.asm              operações de deslocamento para isolar e ajustar um grupo de bits

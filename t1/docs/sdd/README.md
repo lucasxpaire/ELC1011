@@ -28,6 +28,7 @@ Conjunto de especificações técnicas modulares que servem como guia estrito de
 - [spec-04-io-arquivos-e-buffers.md](specs/spec-04-io-arquivos-e-buffers.md): Mecanismo de leitura/escrita em arquivos via Syscalls do MARS com streaming de buffer.
 - [spec-05-interface-terminal-main.md](specs/spec-05-interface-terminal-main.md): Interface do usuário via terminal, menus, sanitização de strings e orquestração.
 - [spec-06-plano-de-testes-e-validacao.md](specs/spec-06-plano-de-testes-e-validacao.md): Matriz de testes unitários e de integração com vetores de teste e automação via CLI.
+- [spec-07-padroes-de-codificacao-e-estilo.md](specs/spec-07-padroes-de-codificacao-e-estilo.md): Diretrizes de estilo acadêmico (Prof. Giovani Baratto), rótulos em português, mapas de pilha/registradores e cabeçalhos.
 
 ### 2.2 Questões em Aberto (`questions/`)
 Decisões de design, ambiguidades dos requisitos originais e propostas adotadas:

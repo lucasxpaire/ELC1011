@@ -1,0 +1,4 @@
+ex-000-035.asm      operações lógicas: guarda vários campos em um registro de uma palavra
+ex-000-043.asm      exemplo do uso do operador and para isolar bits de uma palavra
+ex-000-044.asm      exemplo dos operadores and, or e xor para setar, resetar e inverter bits
+
