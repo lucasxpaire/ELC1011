@@ -1,0 +1,6 @@
+ex-000-001.asm      tradução de a = b + c;
+ex-000-002.asm      tradução de a = b + c + d + e;
+ex-000-039.asm      exemplo de instruções load e store
+ex-000-040.asm      tradução de a = 10; e b = 1000000;
+ex-000-041.asm      tradução de a = b;
+ex-000-042.asm      tradução de a = b + 1 e c = b + 1000000.

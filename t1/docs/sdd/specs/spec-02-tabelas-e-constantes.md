@@ -1,7 +1,7 @@
 # Spec-02: Tabelas e Constantes Criptográficas do S-AES
 
 ## 1. Visão Geral
-Esta especificação descreve as tabelas estáticas de substituição e multiplicação no corpo finito $GF(2^4)$ necessárias para o algoritmo **S-AES (Simplified AES)**. Todas as tabelas serão armazenadas na seção `.data` do módulo [src/saes_tables.asm](../../src/saes_tables.asm).
+Esta especificação descreve as tabelas estáticas de substituição e multiplicação no corpo finito $GF(2^4)$ necessárias para o algoritmo **S-AES (Simplified AES)**. Todas as tabelas são armazenadas na seção `.data` do módulo [src/saes_tables.asm](../../src/saes_tables.asm), seguindo o padrão de nomenclatura em português definido na [Spec-07](spec-07-padroes-de-codificacao-e-estilo.md).
 
 ---
 
@@ -13,11 +13,11 @@ A S-Box do S-AES mapeia um nibble de entrada de 4 bits ($0x0$ a $0xF$) para um n
 | :--- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | **Saída (Hex)** | **9** | **4** | **A** | **B** | **D** | **1** | **8** | **5** | **6** | **2** | **0** | **3** | **C** | **E** | **F** | **7** |
 
-### 2.2 Declaração em MIPS Assembly
+### 2.2 Declaração em MIPS Assembly (`tabela_sbox`)
 ```mips
 .data
 .align 0
-sbox:
+tabela_sbox:
     .byte 0x09, 0x04, 0x0A, 0x0B, 0x0D, 0x01, 0x08, 0x05
     .byte 0x06, 0x02, 0x00, 0x03, 0x0C, 0x0E, 0x0F, 0x07
 ```
@@ -32,11 +32,11 @@ Utilizada na fase de descriptografia para desfazer o mapeamento da S-Box.
 | :--- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | **Saída (Hex)** | **A** | **5** | **9** | **B** | **1** | **7** | **8** | **F** | **6** | **0** | **2** | **3** | **C** | **4** | **D** | **E** |
 
-### 3.2 Declaração em MIPS Assembly
+### 3.2 Declaração em MIPS Assembly (`tabela_inv_sbox`)
 ```mips
 .data
 .align 0
-inv_sbox:
+tabela_inv_sbox:
     .byte 0x0A, 0x05, 0x09, 0x0B, 0x01, 0x07, 0x08, 0x0F
     .byte 0x06, 0x00, 0x02, 0x03, 0x0C, 0x04, 0x0D, 0x0E
 ```
@@ -44,7 +44,7 @@ inv_sbox:
 ---
 
 ## 4. Constantes de Rodada (Round Constants - RCON)
-Utilizadas na rotina de expansão de chaves (`Key Expansion`):
+Utilizadas na rotina de expansão de chaves (`expande_chave`):
 - $\text{RCON}(1) = 0x80$ (`1000 0000_2`)
 - $\text{RCON}(2) = 0x30$ (`0011 0000_2`)
 
@@ -66,7 +66,7 @@ Corresponde a multiplicar por $x$ com redução por $x^4 + x + 1$:
 ```mips
 .data
 .align 0
-gf16_mult2:
+tabela_mult2:
     .byte 0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E
     .byte 0x03, 0x01, 0x07, 0x05, 0x0B, 0x09, 0x0F, 0x0D
 ```
@@ -76,7 +76,7 @@ Corresponde a aplicar a multiplicação por 2 duas vezes:
 ```mips
 .data
 .align 0
-gf16_mult4:
+tabela_mult4:
     .byte 0x00, 0x04, 0x08, 0x0C, 0x03, 0x07, 0x0B, 0x0F
     .byte 0x06, 0x02, 0x0E, 0x0A, 0x05, 0x01, 0x0D, 0x09
 ```
@@ -86,18 +86,26 @@ Corresponde a $(x \cdot 8) \oplus x$:
 ```mips
 .data
 .align 0
-gf16_mult9:
+tabela_mult9:
     .byte 0x00, 0x09, 0x01, 0x08, 0x02, 0x0B, 0x03, 0x0A
     .byte 0x04, 0x0D, 0x05, 0x0C, 0x06, 0x0F, 0x07, 0x0E
 ```
 
 ---
 
-## 6. Validação Cruzada com o Documento de Referência
+## 6. Vetor de Subchaves (`subchaves`)
+Vetor reservado na seção `.data` para guardar as três subchaves geradas (16 bits cada):
+```mips
+.data
+.align 1
+subchaves:
+    .half 0, 0, 0
+```
+
+---
+
+## 7. Validação Cruzada com o Documento de Referência
 Os valores acima foram verificados diretamente contra os cálculos intermediários de [docs/simplified-aes-example.pdf](../simplified-aes-example.pdf):
-- $4 \times E (14) = 0xD$ $\rightarrow$ `gf16_mult4[14] = 0x0D` *(Página 3)*
-- $9 \times F (15) = 0xE$ $\rightarrow$ `gf16_mult9[15] = 0x0E` *(Página 4)*
-- $9 \times 6 = 0x3$ $\rightarrow$ `gf16_mult9[6] = 0x03` *(Página 4)*
-- $9 \times 3 = 0x8$ $\rightarrow$ `gf16_mult9[3] = 0x08` *(Página 4)*
-- $2 \times 6 = 0xC$ $\rightarrow$ `gf16_mult2[6] = 0x0C` *(Página 4)*
-- $2 \times F (15) = 0xD$ $\rightarrow$ `gf16_mult2[15] = 0x0D` *(Página 4)*
+- $4 \times E (14) = 0xD$ $\rightarrow$ `tabela_mult4[14] = 0x0D` *(Página 3)*
+- $9 \times F (15) = 0xE$ $\rightarrow$ `tabela_mult9[15] = 0x0E` *(Página 4)*
+- $9 \times 6 = 0x3$ $\rightarrow$ `tabela_mult9[6] = 0x03` *(Página 4)*

@@ -1,0 +1,7 @@
+ex-000-050.asm      exemplo com a tradução da instrução goto: um laço infinito.
+ex-000-051.asm      exemplo com a tradução da instrução if.
+ex-000-052.asm      exemplo com a tradução da instrução if else.
+ex-000-055.asm      exemplo com a tradução da instrução switch-case (usando uma tabela para desvios).
+ex-000-055a.asm     exemplo com a tradução da instrução switch-case (usando comparações).
+
+

@@ -1,0 +1,2 @@
+ex-000-004.asm      trabalhando com índices numéricos. Traduzindo a[2] = a[0] + a[1];
+ex-000-005.asm      trabalhando com índices variáveis. Traduzindo a[k] = a[i] + a[j];
