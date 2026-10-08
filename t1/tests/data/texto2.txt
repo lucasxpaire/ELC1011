@@ -1,0 +1,3 @@
+O algoritmo S-AES e um cifrador de bloco didatico que opera em blocos de 16 bits.
+Construido com duas rodadas utilizando o corpo de Galois GF(16) com o polinomio x^4 + x + 1.
+Validacao concluida com exito pelo time de desenvolvimento!
