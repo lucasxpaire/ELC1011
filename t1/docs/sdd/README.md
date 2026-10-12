@@ -29,12 +29,25 @@ Conjunto de especificações técnicas modulares que servem como guia estrito de
 - [spec-05-interface-terminal-main.md](specs/spec-05-interface-terminal-main.md): Interface do usuário via terminal, menus, sanitização de strings e orquestração.
 - [spec-06-plano-de-testes-e-validacao.md](specs/spec-06-plano-de-testes-e-validacao.md): Matriz de testes unitários e de integração com vetores de teste e automação via CLI.
 - [spec-07-padroes-de-codificacao-e-estilo.md](specs/spec-07-padroes-de-codificacao-e-estilo.md): Diretrizes de estilo acadêmico (Prof. Giovani Baratto), rótulos em português, mapas de pilha/registradores e cabeçalhos.
+- [spec-08-refinamento-e-naturalizacao-do-codigo.md](specs/spec-08-refinamento-e-naturalizacao-do-codigo.md): Refinamento da pilha, eliminação de tabelas ASCII artificiais e naturalização orgânica dos comentários.
 
 ### 2.2 Questões em Aberto (`questions/`)
 Decisões de design, ambiguidades dos requisitos originais e propostas adotadas:
 
 - [Q01-derivacao-chave.md](questions/Q01-derivacao-chave.md): Mapeamento da senha de texto `"ELC1011"` (7 bytes) para a chave de 16 bits do S-AES.
 - [Q02-padding-arquivos-impares.md](questions/Q02-padding-arquivos-impares.md): Estratégia de preenchimento (*padding*) para arquivos com número ímpar de bytes.
+
+### 2.3 Auditoria e Revisões Atômicas (`reviews/`)
+Especificações formais de revisão particionadas em blocos atômicos para auditoria minuciosa e sem omissões:
+
+- [README.md](reviews/README.md): Metodologia de auditoria em pequenos blocos e critérios de avaliação.
+- [rev-01-tabelas-e-constantes.md](reviews/rev-01-tabelas-e-constantes.md): Auditoria das tabelas estáticas (`saes_tables.asm`).
+- [rev-02-utilitarios-e-strings.md](reviews/rev-02-utilitarios-e-strings.md): Auditoria da sanitização de strings e derivação de chave (`utils.asm`).
+- [rev-03-nucleo-saes-expansao-e-transformacoes.md](reviews/rev-03-nucleo-saes-expansao-e-transformacoes.md): Auditoria de expansão de chaves e substituições/deslocamentos (`saes.asm` - P1).
+- [rev-04-nucleo-saes-mistura-cifra-decifra.md](reviews/rev-04-nucleo-saes-mistura-cifra-decifra.md): Auditoria de MixColumns, Cifra e Decifra de bloco (`saes.asm` - P2).
+- [rev-05-io-arquivos-e-buffers.md](reviews/rev-05-io-arquivos-e-buffers.md): Auditoria de I/O em disco, buffer streaming e zero-padding (`file_io.asm`).
+- [rev-06-interface-terminal-e-orquestracao.md](reviews/rev-06-interface-terminal-e-orquestracao.md): Auditoria da interface com o usuário e main loop (`main.asm`).
+- [rev-07-padroes-baratto-e-testes.md](reviews/rev-07-padroes-baratto-e-testes.md): Auditoria do padrão didático Baratto, testes unitários e de integração.
 
 ---
 
