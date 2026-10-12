@@ -2,20 +2,16 @@
 # Autores: Lucas Xavier Pairé e Miguel Brondani
 # Disciplina: ELC1011 - Organização de Computadores
 # Professor: Giovani Baratto
-# Descrição: Programa principal da aplicação de criptografia e descriptografia
-#            de arquivos utilizando o algoritmo S-AES. Apresenta interface via terminal.
-# Assembler: MARS
+# Descrição: Programa principal da aplicacao de criptografia e descriptografia S-AES
 #*******************************************************************************
 
 .data
 .align 2
-# Buffers estáticos de memória
 buffer_nome_entrada:    .space 128
 buffer_nome_saida:      .space 128
 buffer_chave:           .space 64
 buffer_opcao:           .space 16
 
-# Mensagens de texto da interface com o usuário
 msg_banner:
     .asciiz "\n=========================================================\n       ELC1011 - Criptografia de Arquivos S-AES\n       Autores: Lucas Xavier Pairé e Miguel Brondani\n=========================================================\n"
 
@@ -56,84 +52,61 @@ msg_despedida:
 .globl main
 
 ###############################################################################
-# Procedimento principal (main)
-#
-# *** Mapa de registradores ***
-# +-------+-----------------------------------------------+
-# | Reg   | Descrição                                     |
-# +-------+-----------------------------------------------+
-# | $a0   | argumentos das chamadas de procedimentos e syscalls
-# | $a1   | argumentos secundários                        |
-# | $a2   | endereço base das subchaves                   |
-# | $a3   | modo de operação (1 = Cifra, 2 = Decifra)     |
-# | $t0   | endereço base do buffer da opção              |
-# | $t1   | caractere da opção lida do teclado            |
-# | $t2   | constante de comparação de opção ('0', '1', '2')
-# | $v0   | código de serviço do sistema (syscall)        |
-# +-------+-----------------------------------------------+
+# main
+# Interface com o usuario e coordenacao das operacoes de cifra e decifra.
 ###############################################################################
 main:
-# corpo do procedimento
-            # Apresenta o banner de inicialização
-            li      $v0, 4              # serviço 4: imprime string
-            la      $a0, msg_banner     # $a0 <- endereço do banner
+            # Exibe o banner inicial
+            li      $v0, 4
+            la      $a0, msg_banner
             syscall
 
 laco_menu_principal:
-            # Apresenta o menu de opções
+            # Menu de opcoes
             li      $v0, 4
-            la      $a0, msg_menu       # $a0 <- endereço do texto do menu
+            la      $a0, msg_menu
             syscall
 
-            # Lê a opção do usuário via serviço 8 (leitura de string)
-            li      $v0, 8              # serviço 8: lê string
-            la      $a0, buffer_opcao   # $a0 <- buffer para a opção
-            li      $a1, 16             # limite de 16 caracteres
+            # Le opcao do usuario
+            li      $v0, 8
+            la      $a0, buffer_opcao
+            li      $a1, 16
             syscall
 
-            # Inspeciona o primeiro caractere digitado
             la      $t0, buffer_opcao
-            lbu     $t1, 0($t0)         # $t1 <- caractere digitado
+            lbu     $t1, 0($t0)
 
-            # Opção '0': Encerrar
             li      $t2, '0'
             beq     $t1, $t2, executa_encerramento
 
-            # Opção '1': Criptografar
             li      $t2, '1'
             beq     $t1, $t2, executa_criptografia
 
-            # Opção '2': Descriptografar
             li      $t2, '2'
             beq     $t1, $t2, executa_descriptografia
 
-            # Opção Inválida
+            # Opcao invalida
             li      $v0, 4
             la      $a0, msg_opcao_invalida
             syscall
             j       laco_menu_principal
 
-# ------------------------------------------------------------------------------
-# Ramo de Criptografia (Opção 1)
-# ------------------------------------------------------------------------------
 executa_criptografia:
-            # 1. Solicita nome do arquivo de entrada
+            # Arquivo de entrada
             li      $v0, 4
             la      $a0, msg_pede_entrada_cifra
             syscall
-
             li      $v0, 8
             la      $a0, buffer_nome_entrada
             li      $a1, 128
             syscall
             la      $a0, buffer_nome_entrada
-            jal     remove_quebra_linha # sanitiza removendo '\n'
+            jal     remove_quebra_linha
 
-            # 2. Solicita nome do arquivo de saída
+            # Arquivo de saida
             li      $v0, 4
             la      $a0, msg_pede_saida_cifra
             syscall
-
             li      $v0, 8
             la      $a0, buffer_nome_saida
             li      $a1, 128
@@ -141,11 +114,10 @@ executa_criptografia:
             la      $a0, buffer_nome_saida
             jal     remove_quebra_linha
 
-            # 3. Solicita chave/senha de acesso
+            # Chave de acesso
             li      $v0, 4
             la      $a0, msg_pede_chave
             syscall
-
             li      $v0, 8
             la      $a0, buffer_chave
             li      $a1, 64
@@ -153,23 +125,21 @@ executa_criptografia:
             la      $a0, buffer_chave
             jal     remove_quebra_linha
 
-            # 4. Derivação e expansão da chave
+            # Deriva chave e calcula subchaves
             la      $a0, buffer_chave
-            jal     deriva_chave        # $v0 <- chave de 16 bits gerada
+            jal     deriva_chave
+            move    $a0, $v0
+            la      $a1, subchaves
+            jal     expande_chave
 
-            move    $a0, $v0            # $a0 <- chave mestre
-            la      $a1, subchaves      # $a1 <- endereço do vetor de subchaves
-            jal     expande_chave       # computa K0, K1 e K2
-
-            # 5. Processamento do arquivo em modo de criptografia (modo 1)
+            # Criptografa o arquivo (modo 1)
             la      $a0, buffer_nome_entrada
             la      $a1, buffer_nome_saida
             la      $a2, subchaves
-            li      $a3, 1              # 1 = Criptografia
+            li      $a3, 1
             jal     processa_arquivo
 
-            bnez    $v0, falha_criptografia # se retorno != 0, ocorreu erro
-
+            bnez    $v0, falha_criptografia
             li      $v0, 4
             la      $a0, msg_sucesso_cifra
             syscall
@@ -181,15 +151,11 @@ falha_criptografia:
             syscall
             j       laco_menu_principal
 
-# ------------------------------------------------------------------------------
-# Ramo de Descriptografia (Opção 2)
-# ------------------------------------------------------------------------------
 executa_descriptografia:
-            # 1. Solicita nome do arquivo cifrado
+            # Arquivo de entrada (cifrado)
             li      $v0, 4
             la      $a0, msg_pede_entrada_decifra
             syscall
-
             li      $v0, 8
             la      $a0, buffer_nome_entrada
             li      $a1, 128
@@ -197,11 +163,10 @@ executa_descriptografia:
             la      $a0, buffer_nome_entrada
             jal     remove_quebra_linha
 
-            # 2. Solicita nome do arquivo decifrado
+            # Arquivo de saida (decifrado)
             li      $v0, 4
             la      $a0, msg_pede_saida_decifra
             syscall
-
             li      $v0, 8
             la      $a0, buffer_nome_saida
             li      $a1, 128
@@ -209,11 +174,10 @@ executa_descriptografia:
             la      $a0, buffer_nome_saida
             jal     remove_quebra_linha
 
-            # 3. Solicita chave/senha de acesso
+            # Chave de acesso
             li      $v0, 4
             la      $a0, msg_pede_chave
             syscall
-
             li      $v0, 8
             la      $a0, buffer_chave
             li      $a1, 64
@@ -221,23 +185,21 @@ executa_descriptografia:
             la      $a0, buffer_chave
             jal     remove_quebra_linha
 
-            # 4. Derivação e expansão da chave
+            # Deriva chave e calcula subchaves
             la      $a0, buffer_chave
             jal     deriva_chave
-
             move    $a0, $v0
             la      $a1, subchaves
             jal     expande_chave
 
-            # 5. Processamento do arquivo em modo de descriptografia (modo 2)
+            # Descriptografa o arquivo (modo 2)
             la      $a0, buffer_nome_entrada
             la      $a1, buffer_nome_saida
             la      $a2, subchaves
-            li      $a3, 2              # 2 = Descriptografia
+            li      $a3, 2
             jal     processa_arquivo
 
             bnez    $v0, falha_descriptografia
-
             li      $v0, 4
             la      $a0, msg_sucesso_decifra
             syscall
@@ -249,20 +211,13 @@ falha_descriptografia:
             syscall
             j       laco_menu_principal
 
-# ------------------------------------------------------------------------------
-# Encerramento do Programa (Opção 0)
-# ------------------------------------------------------------------------------
 executa_encerramento:
             li      $v0, 4
             la      $a0, msg_despedida
             syscall
-
-            li      $v0, 10             # serviço 10: encerra o programa
+            li      $v0, 10             # encerra execucao
             syscall
 
-# ==============================================================================
-# Inclusão dos Módulos Especializados
-# ==============================================================================
 .include "saes_tables.asm"
 .include "saes.asm"
 .include "utils.asm"

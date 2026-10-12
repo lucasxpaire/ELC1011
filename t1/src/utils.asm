@@ -2,9 +2,7 @@
 # Autores: Lucas Xavier Pairé e Miguel Brondani
 # Disciplina: ELC1011 - Organização de Computadores
 # Professor: Giovani Baratto
-# Descrição: Procedimentos utilitários de manipulação de strings e derivação
-#            de chave criptográfica de 16 bits para o algoritmo S-AES.
-# Assembler: MARS
+# Descrição: Utilitarios para tratamento de strings e derivacao de chave
 #*******************************************************************************
 
 .text
@@ -12,104 +10,84 @@
 .globl deriva_chave
 
 ###############################################################################
-# Procedimento: remove_quebra_linha
-# Descrição: Remove caracteres delimitadores de fim de linha ('\n' = 10 e '\r' = 13)
-#            inseridos pelo serviço 8 do sistema, substituindo por '\0'.
+# remove_quebra_linha
+# Remove delimitadores de fim de linha ('\n' = 10 e '\r' = 13) substituindo por '\0'.
 #
-# *** Mapa de registradores ***
-# +-------+-----------------------------------------------+
-# | Reg   | Descrição                                     |
-# +-------+-----------------------------------------------+
-# | $a0   | endereço base da string terminada em nulo     |
-# | $t0   | ponteiro para o caractere atual da string     |
-# | $t1   | caractere lido da memória                     |
-# | $t2   | constante de comparação (10 para '\n' e 13)   |
-# | $v0   | comprimento da string útil retornado          |
-# +-------+-----------------------------------------------+
+# Entrada:
+#   $a0: endereco da string terminada em nulo
+# Retorno:
+#   $v0: comprimento util da string
+# Registradores usados: $t0, $t1, $t2
 ###############################################################################
 remove_quebra_linha:
-# corpo do procedimento
-            move    $t0, $a0            # $t0 <- ponteiro para o início da string
-            li      $v0, 0              # $v0 <- contador de caracteres = 0
+            move    $t0, $a0
+            li      $v0, 0              # contador de caracteres
 
 laco_varre_string:
-            lbu     $t1, 0($t0)         # carrega byte da posição atual
-            beqz    $t1, fim_varredura  # se encontrou '\0', encerra
+            lbu     $t1, 0($t0)
+            beqz    $t1, fim_varredura
 
-            # Verifica caractere '\n' (código ASCII 10)
-            li      $t2, 10             # $t2 <- 10 ('\n')
+            # Verifica se encontrou '\n' ou '\r'
+            li      $t2, 10
+            beq     $t1, $t2, trunca_delimitador
+            li      $t2, 13
             beq     $t1, $t2, trunca_delimitador
 
-            # Verifica caractere '\r' (código ASCII 13)
-            li      $t2, 13             # $t2 <- 13 ('\r')
-            beq     $t1, $t2, trunca_delimitador
-
-            addi    $t0, $t0, 1         # avança para o próximo caractere
-            addi    $v0, $v0, 1         # incrementa o comprimento útil
-            j       laco_varre_string   # repete o laço
+            addi    $t0, $t0, 1
+            addi    $v0, $v0, 1
+            j       laco_varre_string
 
 trunca_delimitador:
-            sb      $zero, 0($t0)       # substitui o delimitador por '\0'
+            sb      $zero, 0($t0)       # substitui por '\0'
 
 fim_varredura:
-            jr      $ra                 # retorna ao procedimento chamador
+            jr      $ra
 
 
 ###############################################################################
-# Procedimento: deriva_chave
-# Descrição: Converte uma string de tamanho qualquer em uma chave de 16 bits
-#            para o algoritmo S-AES através da técnica de dobramento por XOR.
-#            - Byte Alto (bits 15..8): XOR de caracteres de índices pares (0, 2, 4...)
-#            - Byte Baixo (bits 7..0): XOR de caracteres de índices ímpares (1, 3, 5...)
+# deriva_chave
+# Converte a senha em uma chave de 16 bits por dobramento XOR:
+#   - Byte Alto: XOR dos caracteres de indices pares
+#   - Byte Baixo: XOR dos caracteres de indices impares
 #
-# *** Mapa de registradores ***
-# +-------+-----------------------------------------------+
-# | Reg   | Descrição                                     |
-# +-------+-----------------------------------------------+
-# | $a0   | endereço da string da senha terminada em nulo |
-# | $t0   | ponteiro para o caractere atual               |
-# | $t1   | acumulador do byte alto (índices pares)       |
-# | $t2   | acumulador do byte baixo (índices ímpares)    |
-# | $t3   | índice do caractere atual (0, 1, 2, 3...)     |
-# | $t4   | valor do caractere lido                       |
-# | $t5   | indicador de paridade do índice (bit 0)       |
-# | $v0   | chave de 16 bits gerada                       |
-# +-------+-----------------------------------------------+
+# Entrada:
+#   $a0: endereco da string da senha
+# Retorno:
+#   $v0: chave de 16 bits gerada
+# Registradores usados: $t0, $t1, $t2, $t3, $t4, $t5
 ###############################################################################
 deriva_chave:
-# corpo do procedimento
-            move    $t0, $a0            # $t0 <- endereço inicial da senha
-            li      $t1, 0              # $t1 <- acumulador par = 0
-            li      $t2, 0              # $t2 <- acumulador ímpar = 0
-            li      $t3, 0              # $t3 <- índice inicial = 0
+            move    $t0, $a0            # ponteiro para a senha
+            li      $t1, 0              # acumulador par
+            li      $t2, 0              # acumulador impar
+            li      $t3, 0              # indice do caractere
 
 laco_deriva_chave:
-            lbu     $t4, 0($t0)         # lê caractere da memória
-            beqz    $t4, fim_derivacao  # se atingiu '\0', encerra
+            lbu     $t4, 0($t0)
+            beqz    $t4, fim_derivacao
 
-            # Testa se o índice é par ou ímpar (isolando o bit menos significativo)
-            andi    $t5, $t3, 1         # $t5 <- bit 0 do índice
-            beqz    $t5, acumula_par    # se for zero, o índice é par
+            # Testa se o indice e par ou impar
+            andi    $t5, $t3, 1
+            beqz    $t5, acumula_par
 
-            # Índice ímpar: acumula em $t2
-            xor     $t2, $t2, $t4       # $t2 <- $t2 ^ caractere
+            # Indice impar
+            xor     $t2, $t2, $t4
             j       avanca_indice
 
 acumula_par:
-            # Índice par: acumula em $t1
-            xor     $t1, $t1, $t4       # $t1 <- $t1 ^ caractere
+            # Indice par
+            xor     $t1, $t1, $t4
 
 avanca_indice:
-            addi    $t0, $t0, 1         # avança ponteiro da string
-            addi    $t3, $t3, 1         # incrementa índice
-            j       laco_deriva_chave   # repete o laço
+            addi    $t0, $t0, 1
+            addi    $t3, $t3, 1
+            j       laco_deriva_chave
 
 fim_derivacao:
-            # Garante que cada acumulador contenha exatamente 8 bits
-            andi    $t1, $t1, 0xFF      # isola byte alto
-            andi    $t2, $t2, 0xFF      # isola byte baixo
+            andi    $t1, $t1, 0xFF
+            andi    $t2, $t2, 0xFF
 
-            # Concatena em uma palavra de 16 bits: (t1 << 8) | t2
-            sll     $v0, $t1, 8         # $v0 <- byte alto posicionado nos bits 15..8
-            or      $v0, $v0, $t2       # $v0 <- concatena byte baixo nos bits 7..0
-            jr      $ra                 # retorna ao procedimento chamador
+            # Concatena em palavra de 16 bits: (t1 << 8) | t2
+            sll     $v0, $t1, 8
+            or      $v0, $v0, $t2
+            jr      $ra
