@@ -1,0 +1,27 @@
+{
+  "feature": "t2-padroes-codigo",
+  "timestamp": "2026-10-25T21:28:33.621Z",
+  "gitRev": "1bf5725",
+  "command": "node --test --test-reporter=tap t2/tests/trabalho2.test.js",
+  "reporter": "tap",
+  "exitCode": 0,
+  "testsParsed": 8,
+  "results": {
+    "AC-006": {
+      "status": "pass",
+      "testName": "Guia formal de padrões de codificação do T2 @spec:AC-006",
+      "method": "tap"
+    },
+    "AC-007": {
+      "status": "pass",
+      "testName": "Conformidade estilística e estrutural de q1.asm @spec:AC-007",
+      "method": "tap"
+    },
+    "AC-008": {
+      "status": "pass",
+      "testName": "Preservação da corretude funcional e execução no MARS @spec:AC-008",
+      "method": "tap"
+    }
+  },
+  "principles": {}
+}

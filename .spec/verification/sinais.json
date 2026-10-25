@@ -90,6 +90,15 @@
       "primeiraVez": "2026-10-24T14:25:43.503Z",
       "ultimaVez": "2026-10-24T14:25:43.503Z",
       "gitRev": "d05acf8"
+    },
+    "VERIFY_OBSOLETO::t2-parte-01::—": {
+      "codigo": "VERIFY_OBSOLETO",
+      "feature": "t2-parte-01",
+      "ref": "—",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-10-25T21:28:40.422Z",
+      "ultimaVez": "2026-10-25T21:28:40.423Z",
+      "gitRev": "1bf5725"
     }
   }
 }
