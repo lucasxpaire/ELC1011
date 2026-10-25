@@ -1,14 +1,9 @@
 #*******************************************************************************
+# Autor: Lucas Xavier Pairé
 # Disciplina: ELC1011 - Organização de Computadores
-# Professor:  Giovani Baratto
-# Aluno:      Lucas Xavier Pairé
-# Trabalho 2 - Parte 1 - Questão 1
-# Arquivo:    q1.asm
-# Descrição:  Tradução do programa em C (Listagem 1) para Assembly MIPS.
-#             Demonstra manipulação de ponteiros, variáveis locais na pilha,
-#             variável global no segmento .data, chamadas de procedimentos
-#             folha e não-folha, e rotina de printf simplificado.
-# Assembler:  MARS 4.5
+# Professor: Giovani Baratto
+# Descrição: Tradução do programa com ponteiros e procedimentos para MIPS
+# Assembler: MARS
 #*******************************************************************************
 
 ################################################################################
@@ -16,12 +11,12 @@
 ################################################################################
 .data
 
-# Variável global x (declarada fora de funções no programa em C)
-x:              .word   0
+# Variável global x (declarada com escopo externo no código em C)
+x:                  .word   0
 
-# Strings para a função de impressão simplificada (printf)
-str_msg:        .asciiz "O resultado e "
-str_newline:    .asciiz "\n"
+# Mensagens textuais formatadas para o serviço de impressão
+str_resultado:      .asciiz "O resultado e "
+str_quebra_linha:   .asciiz "\n"
 
 ################################################################################
 # Segmento de Texto (Código)
@@ -30,228 +25,177 @@ str_newline:    .asciiz "\n"
 .globl main
 .globl media3x2y
 .globl troca
+.globl imprime_resultado
 
-#/*=============================================================================
-# Procedimento: main
+###############################################################################
+# main
+# Ponto de entrada: inicializa variáveis, chama media3x2y e imprime o resultado
 #
-# int main(void)
-# {
-#     int y;
-#     int z;
-#
-#     x = 5;
-#     y = 10;
-#
-#     z = media3x2y(x, y);
-#
-#     printf("O resultado e %d\n", z);
-#
-#     return 0;
-# }
-#=============================================================================*/
-################################################################################
-# Mapa da memória da pilha para `main`
-#
-#  | $ra | $sp + 12   Endereço de retorno para o SO / chamador
-#  |  z  | $sp + 4    Variável local z
-#  |  y  | $sp + 0    Variável local y
-################################################################################
+# Entrada: nenhuma
+# Retorno: nenhum
+# Registradores usados: $t0, $t1, $a0, $a1, $v0
+# Pilha: 16 bytes ($ra em $sp+12, z em $sp+4, y em $sp+0)
+###############################################################################
 main:
-        # Prólogo: aloca o quadro na pilha e salva o endereço de retorno
-        addiu   $sp, $sp, -16           # Reserva 16 bytes na pilha
-        sw      $ra, 12($sp)            # Salva $ra
+# prologo
+            addiu   $sp, $sp, -16       # ajusta a pilha para 4 palavras
+            sw      $ra, 12($sp)        # salva $ra na pilha
 
-        # x = 5; (variável global alocada no segmento .data)
-        li      $t0, 5                  # Carrega a constante 5
-        sw      $t0, x                  # Armazena 5 em x (.data)
+# corpo do procedimento
+            # x = 5 (variável global)
+            li      $t0, 5              # $t0 <- 5
+            sw      $t0, x              # x <- 5
 
-        # y = 10; (variável local alocada na pilha)
-        li      $t1, 10                 # Carrega a constante 10
-        sw      $t1, 0($sp)             # Armazena 10 em y ($sp + 0)
+            # y = 10 (variável local)
+            li      $t1, 10             # $t1 <- 10
+            sw      $t1, 0($sp)         # y <- 10
 
-        # z = media3x2y(x, y);
-        lw      $a0, x                  # $a0 <- x (primeiro argumento)
-        lw      $a1, 0($sp)             # $a1 <- y (segundo argumento)
-        jal     media3x2y               # Chama media3x2y(x, y)
-        sw      $v0, 4($sp)             # z = valor de retorno ($v0)
+            # z = media3x2y(x, y)
+            lw      $a0, x              # $a0 <- x (primeiro argumento)
+            lw      $a1, 0($sp)         # $a1 <- y (segundo argumento)
+            jal     media3x2y           # $v0 <- media3x2y(x, y)
+            sw      $v0, 4($sp)         # z <- $v0
 
-        # printf("O resultado e %d\n", z);
-        lw      $a0, 4($sp)             # Passa o valor de z em $a0
-        jal     printf_simplificado     # Chama a rotina simplificada de impressão
+            # imprime_resultado(z)
+            lw      $a0, 4($sp)         # $a0 <- z
+            jal     imprime_resultado   # exibe o resultado no terminal MARS
 
-        # Epílogo: restaura o endereço de retorno e desaloca a pilha
-        lw      $ra, 12($sp)            # Restaura $ra
-        addiu   $sp, $sp, 16            # Libera o espaço da pilha
+# epilogo
+            lw      $ra, 12($sp)        # restaura $ra da pilha
+            addiu   $sp, $sp, 16        # restaura o ponteiro de pilha
 
-        # Encerramento limpo do programa via syscall
-        li      $v0, 10                 # Serviço 10: exit
-        syscall
+            # encerra a execução do programa no MARS
+            li      $v0, 10             # $v0 <- serviço 10: exit
+            syscall
 
 
-#/*=============================================================================
-# Procedimento: media3x2y
+###############################################################################
+# media3x2y
+# Calcula media ponderada ajustada via laço e troca condicional por ponteiros
 #
-# int media3x2y(int x, int y)
-# {
-#     int a;
-#     int b;
-#
-#     a = 3 * x;
-#     b = 2 * y;
-#     if (x < y) {
-#         troca(&a, &b);
-#     }
-#     while (a > b) {
-#         a = a - 1;
-#         b = b + 1;
-#     }
-#     return a;
-# }
-#=============================================================================*/
-################################################################################
-# Mapa da memória da pilha para `media3x2y`
-#
-#  | $ra | $sp + 20   Endereço de retorno (procedimento não-folha)
-#  | $s1 | $sp + 16   Preservação do registrador salvo $s1 (usado para b/y)
-#  | $s0 | $sp + 12   Preservação do registrador salvo $s0 (usado para a/x)
-#  | (v) | $sp + 8    Alinhamento da pilha (múltiplo de 8 bytes)
-#  |  b  | $sp + 4    Variável local b (endereçável na memória: &b)
-#  |  a  | $sp + 0    Variável local a (endereçável na memória: &a)
-################################################################################
+# Entrada:
+#   $a0: parâmetro x
+#   $a1: parâmetro y
+# Retorno:
+#   $v0: resultado do cálculo (esperado: 17)
+# Registradores preservados: $s0, $s1
+# Pilha: 24 bytes ($ra em $sp+20, $s1 em $sp+16, $s0 em $sp+12, b em $sp+4, a em $sp+0)
+###############################################################################
 media3x2y:
-        # Prólogo: aloca quadro de pilha de 24 bytes e preserva registradores
-        addiu   $sp, $sp, -24           # Ajusta o ponteiro de pilha
-        sw      $ra, 20($sp)            # Salva o endereço de retorno
-        sw      $s1, 16($sp)            # Salva $s1
-        sw      $s0, 12($sp)            # Salva $s0
+# prologo
+            addiu   $sp, $sp, -24       # aloca 24 bytes no quadro da pilha
+            sw      $ra, 20($sp)        # salva $ra na pilha
+            sw      $s1, 16($sp)        # salva $s1 na pilha
+            sw      $s0, 12($sp)        # salva $s0 na pilha
 
-        # Copia parâmetros de entrada para registradores seguros
-        move    $s0, $a0                # $s0 <- x
-        move    $s1, $a1                # $s1 <- y
+# corpo do procedimento
+            move    $s0, $a0            # $s0 <- x
+            move    $s1, $a1            # $s1 <- y
 
-        # a = 3 * x;
-        # Como o trabalho aborda soma e subtração, computamos 3*x como (x << 1) + x
-        sll     $t0, $s0, 1             # $t0 = 2 * x
-        addu    $t0, $t0, $s0           # $t0 = 2 * x + x = 3 * x
-        sw      $t0, 0($sp)             # Armazena na variável local a ($sp + 0)
+            # a = 3 * x = (x << 1) + x
+            sll     $t0, $s0, 1         # $t0 <- 2 * x
+            addu    $t0, $t0, $s0       # $t0 <- 3 * x
+            sw      $t0, 0($sp)         # variável local a <- 3 * x
 
-        # b = 2 * y;
-        # Computado como y << 1
-        sll     $t1, $s1, 1             # $t1 = 2 * y
-        sw      $t1, 4($sp)             # Armazena na variável local b ($sp + 4)
+            # b = 2 * y = y << 1
+            sll     $t1, $s1, 1         # $t1 <- 2 * y
+            sw      $t1, 4($sp)         # variável local b <- 2 * y
 
-        # if (x < y) { troca(&a, &b); }
-        slt     $t2, $s0, $s1           # $t2 = 1 se x < y; senão 0
-        beq     $t2, $zero, fim_if      # Se x não é menor que y, desvia para fim_if
+            # se x < y chama troca(&a, &b)
+            slt     $t2, $s0, $s1       # $t2 <- 1 se x < y; senão 0
+            beq     $t2, $zero, fim_se  # se x >= y desvia para fim_se
 
-        # Prepara ponteiros: endereços das variáveis locais no stack
-        addiu   $a0, $sp, 0             # $a0 = &a (endereço de a na pilha)
-        addiu   $a1, $sp, 4             # $a1 = &b (endereço de b na pilha)
-        jal     troca                   # Chama troca(&a, &b)
+            addiu   $a0, $sp, 0         # $a0 <- endereço de a (&a)
+            addiu   $a1, $sp, 4         # $a1 <- endereço de b (&b)
+            jal     troca               # troca(&a, &b)
 
-fim_if:
-        # Carrega os valores atualizados de a e b para o laço while
-        lw      $s0, 0($sp)             # $s0 <- a
-        lw      $s1, 4($sp)             # $s1 <- b
+fim_se:
+            # recupera valores atualizados de a e b
+            lw      $s0, 0($sp)         # $s0 <- a
+            lw      $s1, 4($sp)         # $s1 <- b
 
-        # while (a > b)
-while_loop:
-        # A condição (a > b) é logicamente equivalente a (b < a)
-        slt     $t0, $s1, $s0           # $t0 = 1 se b < a (ou seja, a > b); senão 0
-        beq     $t0, $zero, fim_while   # Se a não é maior que b, sai do laço
+laco_while:
+            # laço while (a > b) <=> while (b < a)
+            slt     $t0, $s1, $s0       # $t0 <- 1 se b < a (a > b); senão 0
+            beq     $t0, $zero, fim_while # se a <= b encerra o laço
 
-        # a = a - 1;
-        addiu   $s0, $s0, -1            # Decrementa a
+            addiu   $s0, $s0, -1        # $s0 <- a - 1
+            addiu   $s1, $s1, 1         # $s1 <- b + 1
 
-        # b = b + 1;
-        addiu   $s1, $s1, 1             # Incrementa b
-
-        j       while_loop              # Repete o laço
+            j       laco_while          # repete o laço
 
 fim_while:
-        # Atualiza as variáveis na pilha com os valores finais
-        sw      $s0, 0($sp)             # Atualiza a na pilha
-        sw      $s1, 4($sp)             # Atualiza b na pilha
+            sw      $s0, 0($sp)         # a <- $s0 (valor final)
+            sw      $s1, 4($sp)         # b <- $s1 (valor final)
 
-        # return a;
-        move    $v0, $s0                # Coloca o valor de retorno a em $v0
+            move    $v0, $s0            # $v0 <- retorno a
 
-        # Epílogo: restaura registradores preservados e desaloca o stack frame
-        lw      $s0, 12($sp)            # Restaura $s0
-        lw      $s1, 16($sp)            # Restaura $s1
-        lw      $ra, 20($sp)            # Restaura $ra
-        addiu   $sp, $sp, 24            # Desaloca a pilha
-        jr      $ra                     # Retorna ao chamador
+# epilogo
+            lw      $s0, 12($sp)        # restaura $s0 da pilha
+            lw      $s1, 16($sp)        # restaura $s1 da pilha
+            lw      $ra, 20($sp)        # restaura $ra da pilha
+            addiu   $sp, $sp, 24        # desaloca espaço da pilha
+            jr      $ra                 # retorna ao procedimento chamador
 
 
-#/*=============================================================================
-# Procedimento: troca
+###############################################################################
+# troca
+# Permuta dois inteiros na memória desreferenciando seus ponteiros
 #
-# void troca(int* x, int* y)
-# {
-#     int tmp;
-#
-#     tmp = *x;
-#     *x = *y;
-#     *y = tmp;
-# }
-#=============================================================================*/
-################################################################################
-# Mapa da memória da pilha para `troca`
-#
-# Procedimento folha (leaf). Não chama outros procedimentos.
-# Os parâmetros recebidos são ponteiros (endereços de memória de inteiros):
-#   $a0: int* x
-#   $a1: int* y
-# Não há necessidade de salvar $ra. As operações ocorrem diretamente
-# desreferenciando os ponteiros recebidos.
-################################################################################
+# Entrada:
+#   $a0: ponteiro para o primeiro inteiro (*x)
+#   $a1: ponteiro para o segundo inteiro (*y)
+# Retorno: nenhum
+# Registradores usados: $t0, $t1
+###############################################################################
 troca:
-        # tmp = *x;
-        lw      $t0, 0($a0)             # Carrega o valor apontado por x para $t0 (tmp)
+# prologo
+            # procedimento folha: sem alocação de quadro na pilha
 
-        # *x = *y;
-        lw      $t1, 0($a1)             # Carrega o valor apontado por y para $t1
-        sw      $t1, 0($a0)             # Armazena o valor de *y no endereço apontado por x
+# corpo do procedimento
+            lw      $t0, 0($a0)         # $t0 <- *x (tmp = *x)
+            lw      $t1, 0($a1)         # $t1 <- *y
+            sw      $t1, 0($a0)         # *x <- *y
+            sw      $t0, 0($a1)         # *y <- tmp
 
-        # *y = tmp;
-        sw      $t0, 0($a1)             # Armazena tmp (*x original) no endereço apontado por y
-
-        # Retorno ao chamador
-        jr      $ra
+# epilogo
+            jr      $ra                 # retorna ao procedimento chamador
 
 
-#/*=============================================================================
-# Procedimento auxiliar: printf_simplificado
+###############################################################################
+# imprime_resultado
+# Exibe a mensagem formatada "O resultado e <z>\n" no terminal MARS
 #
-# Imprime a mensagem formatada "O resultado e <z>\n" usando as chamadas
-# de sistema do MARS.
-# Parâmetro de entrada:
+# Entrada:
 #   $a0: valor inteiro a ser impresso (<z>)
-#=============================================================================*/
-printf_simplificado:
-        # Prólogo
-        addiu   $sp, $sp, -8
-        sw      $ra, 4($sp)
-        sw      $a0, 0($sp)             # Salva o valor de z
+# Retorno: nenhum
+# Registradores usados: $v0, $a0
+# Pilha: 8 bytes ($ra em $sp+4, z em $sp+0)
+###############################################################################
+imprime_resultado:
+# prologo
+            addiu   $sp, $sp, -8        # aloca 8 bytes na pilha
+            sw      $ra, 4($sp)         # salva $ra na pilha
+            sw      $a0, 0($sp)         # salva valor de z na pilha
 
-        # Imprime o prefixo texto: "O resultado e "
-        la      $a0, str_msg            # Endereço da string
-        li      $v0, 4                  # Syscall 4: print_string
-        syscall
+# corpo do procedimento
+            # exibe texto prefixo
+            la      $a0, str_resultado  # $a0 <- endereço de "O resultado e "
+            li      $v0, 4              # $v0 <- serviço 4: print_string
+            syscall
 
-        # Imprime o número inteiro z
-        lw      $a0, 0($sp)             # Recupera o valor de z
-        li      $v0, 1                  # Syscall 1: print_int
-        syscall
+            # exibe inteiro z
+            lw      $a0, 0($sp)         # $a0 <- z
+            li      $v0, 1              # $v0 <- serviço 1: print_int
+            syscall
 
-        # Imprime a quebra de linha "\n"
-        la      $a0, str_newline        # Endereço da quebra de linha
-        li      $v0, 4                  # Syscall 4: print_string
-        syscall
+            # exibe quebra de linha
+            la      $a0, str_quebra_linha # $a0 <- endereço de "\n"
+            li      $v0, 4              # $v0 <- serviço 4: print_string
+            syscall
 
-        # Epílogo
-        lw      $a0, 0($sp)
-        lw      $ra, 4($sp)
-        addiu   $sp, $sp, 8
-        jr      $ra
+# epilogo
+            lw      $a0, 0($sp)         # restaura $a0 da pilha
+            lw      $ra, 4($sp)         # restaura $ra da pilha
+            addiu   $sp, $sp, 8         # desaloca espaço da pilha
+            jr      $ra                 # retorna ao procedimento chamador
