@@ -1,0 +1,37 @@
+{
+  "feature": "t2-parte-01",
+  "timestamp": "2026-10-25T02:40:11.441Z",
+  "gitRev": "d05acf8",
+  "command": "node --test --test-reporter=tap t2/tests/trabalho2.test.js",
+  "reporter": "tap",
+  "exitCode": 0,
+  "testsParsed": 5,
+  "results": {
+    "AC-001": {
+      "status": "pass",
+      "testName": "Alocação de variáveis globais e locais e conformidade com o simulador MARS @spec:AC-001",
+      "method": "tap"
+    },
+    "AC-002": {
+      "status": "pass",
+      "testName": "Retorno correto da função media3x2y e impressão simplificada @spec:AC-002",
+      "method": "tap"
+    },
+    "AC-003": {
+      "status": "pass",
+      "testName": "Conversão e representação de A e B em ponto fixo com sinal @spec:AC-003",
+      "method": "tap"
+    },
+    "AC-004": {
+      "status": "pass",
+      "testName": "Subtração D = A - B com tabela de vem-uns e análise de overflow @spec:AC-004",
+      "method": "tap"
+    },
+    "AC-005": {
+      "status": "pass",
+      "testName": "Soma E = D + B e análise de igualdade com A @spec:AC-005",
+      "method": "tap"
+    }
+  },
+  "principles": {}
+}

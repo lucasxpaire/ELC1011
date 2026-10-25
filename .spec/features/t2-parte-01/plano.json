@@ -1,0 +1,95 @@
+{
+  "runId": "ELC1011-t2-parte-01-mvn762nm",
+  "feature": "t2-parte-01",
+  "agent": "antigravity",
+  "modo": "paralelo",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-10-25 02:17",
+  "branchTrabalho": "spec/t2-parte-01",
+  "baseDir": ".spec/features/t2-parte-01",
+  "specDir": ".spec",
+  "repoName": "ELC1011",
+  "logsDir": "../onp-worktrees/ELC1011-t2-parte-01-logs",
+  "ondas": [
+    [
+      "faixa-1",
+      "faixa-2",
+      "faixa-3"
+    ]
+  ],
+  "faixas": [
+    {
+      "id": "faixa-1",
+      "branch": "spec/t2-parte-01-faixa-1",
+      "worktree": "../onp-worktrees/ELC1011-t2-parte-01-faixa-1",
+      "tarefas": [
+        {
+          "id": "T-001",
+          "titulo": "Implementação do programa MIPS Assembly q1.asm",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "t2/src/q1.asm"
+          ],
+          "refs": [
+            "US-001",
+            "AC-001",
+            "AC-002"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-2",
+      "branch": "spec/t2-parte-01-faixa-2",
+      "worktree": "../onp-worktrees/ELC1011-t2-parte-01-faixa-2",
+      "tarefas": [
+        {
+          "id": "T-002",
+          "titulo": "Criação da suíte de testes de verificação automatizada",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "t2/tests/trabalho2.test.js"
+          ],
+          "refs": [
+            "US-001",
+            "US-002",
+            "AC-001",
+            "AC-002",
+            "AC-003",
+            "AC-004",
+            "AC-005"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-3",
+      "branch": "spec/t2-parte-01-faixa-3",
+      "worktree": "../onp-worktrees/ELC1011-t2-parte-01-faixa-3",
+      "tarefas": [
+        {
+          "id": "T-003",
+          "titulo": "Elaboração do relatório analítico com resolução da Questão 2",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "t2/docs/resolucao_q2.md"
+          ],
+          "refs": [
+            "US-002",
+            "AC-003",
+            "AC-004",
+            "AC-005"
+          ]
+        }
+      ]
+    }
+  ],
+  "sequenciais": [],
+  "concluidas": [],
+  "avisos": []
+}

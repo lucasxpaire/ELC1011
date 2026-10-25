@@ -1,0 +1,91 @@
+{
+  "runId": "ELC1011-t2-padroes-codigo-mvoaccnv",
+  "feature": "t2-padroes-codigo",
+  "agent": "antigravity",
+  "modo": "paralelo",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-10-25 20:33",
+  "branchTrabalho": "spec/t2-padroes-codigo",
+  "baseDir": ".spec/features/t2-padroes-codigo",
+  "specDir": ".spec",
+  "repoName": "ELC1011",
+  "logsDir": "../onp-worktrees/ELC1011-t2-padroes-codigo-logs",
+  "ondas": [
+    [
+      "faixa-1",
+      "faixa-2",
+      "faixa-3"
+    ]
+  ],
+  "faixas": [
+    {
+      "id": "faixa-1",
+      "branch": "spec/t2-padroes-codigo-faixa-1",
+      "worktree": "../onp-worktrees/ELC1011-t2-padroes-codigo-faixa-1",
+      "tarefas": [
+        {
+          "id": "T-004",
+          "titulo": "Extração e consolidação do guia de padrões em t2/docs/padroes_codificacao.md",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "t2/docs/padroes_codificacao.md"
+          ],
+          "refs": [
+            "US-003",
+            "AC-006"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-2",
+      "branch": "spec/t2-padroes-codigo-faixa-2",
+      "worktree": "../onp-worktrees/ELC1011-t2-padroes-codigo-faixa-2",
+      "tarefas": [
+        {
+          "id": "T-005",
+          "titulo": "Refatoração e naturalização estilística de q1.asm",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "t2/src/q1.asm"
+          ],
+          "refs": [
+            "US-004",
+            "AC-007",
+            "AC-008"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-3",
+      "branch": "spec/t2-padroes-codigo-faixa-3",
+      "worktree": "../onp-worktrees/ELC1011-t2-padroes-codigo-faixa-3",
+      "tarefas": [
+        {
+          "id": "T-006",
+          "titulo": "Suíte de testes de conformidade estilística e integridade funcional",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "t2/tests/trabalho2.test.js"
+          ],
+          "refs": [
+            "US-003",
+            "US-004",
+            "AC-006",
+            "AC-007",
+            "AC-008"
+          ]
+        }
+      ]
+    }
+  ],
+  "sequenciais": [],
+  "concluidas": [],
+  "avisos": []
+}

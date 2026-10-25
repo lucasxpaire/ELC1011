@@ -1,0 +1,12 @@
+{
+  "testCommand": "node --test --test-reporter=tap t2/tests/trabalho2.test.js",
+  "reporter": "tap",
+  "testGlobs": [
+    "t2/tests/**",
+    "test/**",
+    "tests/**"
+  ],
+  "srcGlobs": [
+    "t2/src/**"
+  ]
+}
