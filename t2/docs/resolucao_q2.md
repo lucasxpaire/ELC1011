@@ -194,8 +194,10 @@ $$B = 0001010.0100_2 \quad (+10,25_{10})$$
 
 ### 5.1. Operação Armada com Todos os Vem-uns:
 
+Apresentamos a operação armada, exibindo o vetor completo de transportes (*vem-uns*):
+
 $$\begin{array}{lcccccccccccc}
-\text{Vem-uns:} & \mathbf{0} & \mathbf{0} & \mathbf{0} & \mathbf{0} & \mathbf{0} & \mathbf{0} & \mathbf{0} & & \mathbf{0} & \mathbf{0} & \mathbf{0} & \mathbf{0} & \\
+\text{Vem-uns:} & \mathbf{0} & \mathbf{0} & \mathbf{1} & \mathbf{1} & \mathbf{0} & \mathbf{1} & \mathbf{0} & & \mathbf{0} & \mathbf{0} & \mathbf{0} & \mathbf{0} & \\
 \text{Posições:} & c_{11} & c_{10} & c_9 & c_8 & c_7 & c_6 & c_5 & & c_4 & c_3 & c_2 & c_1 & c_0 \\
 \hline
 \text{Operando } D: & & 1 & 0 & 1 & 1 & 0 & 1 & 0 & . & 1 & 0 & 0 & 0 & (-37,50_{10}) \\
@@ -204,8 +206,20 @@ $$\begin{array}{lcccccccccccc}
 \text{Resultado } E: & & \mathbf{1} & \mathbf{1} & \mathbf{0} & \mathbf{0} & \mathbf{1} & \mathbf{0} & \mathbf{0} & \mathbf{.} & \mathbf{1} & \mathbf{1} & \mathbf{0} & \mathbf{0} & (-27,25_{10})
 \end{array}$$
 
-### Detalhamento dos vem-uns:
-- Nesta soma direta, as posições dos bits $1$ de $D$ e de $B$ não geram transporte (cada soma de bits resulta em $0$ ou $1$), logo todos os vem-uns são $0$ ($c_0 = \dots = c_{11} = 0$).
+### Detalhamento dos vem-uns coluna por coluna (do LSB para o MSB):
+- **Coluna $b_{-4}$:** $0 + 0 + 0 = 0$ (soma $0$, vem-um $c_1 = 0$)
+- **Coluna $b_{-3}$:** $0 + 0 + c_1(0) = 0$ (soma $0$, vem-um $c_2 = 0$)
+- **Coluna $b_{-2}$:** $0 + 1 + c_2(0) = 1$ (soma $1$, vem-um $c_3 = 0$)
+- **Coluna $b_{-1}$:** $1 + 0 + c_3(0) = 1$ (soma $1$, vem-um $c_4 = 0$)
+- **Coluna $b_0$:** $0 + 0 + c_4(0) = 0$ (soma $0$, vem-um $c_5 = 0$)
+- **Coluna $b_1$:** $1 + 1 + c_5(0) = 2_{10} = 10_2$ (soma $0$, vem-um $c_6 = 1$)
+- **Coluna $b_2$:** $0 + 0 + c_6(1) = 1$ (soma $1$, vem-um $c_7 = 0$)
+- **Coluna $b_3$:** $1 + 1 + c_7(0) = 2_{10} = 10_2$ (soma $0$, vem-um $c_8 = 1$)
+- **Coluna $b_4$:** $1 + 0 + c_8(1) = 2_{10} = 10_2$ (soma $0$, vem-um $c_9 = 1$)
+- **Coluna $b_5$:** $0 + 0 + c_9(1) = 1$ (soma $1$, vem-um $c_{10} = 0$)
+- **Coluna $b_6$ (bit de sinal):** $1 + 0 + c_{10}(0) = 1$ (soma $1$, vem-um de saída $c_{11} = 0$)
+
+A análise analítica demonstra que os transportes ativos são gerados nas colunas $b_1$ ($c_6 = 1$), $b_3$ ($c_8 = 1$) e propagado na coluna $b_4$ ($c_9 = 1$), refutando a premissa de ausência de vem-uns e garantindo a correta recomposição dos bits do resultado $E$.
 
 #### Valor resultante:
 $$E = 1100100.1100_2 \quad (-27,25_{10})$$
