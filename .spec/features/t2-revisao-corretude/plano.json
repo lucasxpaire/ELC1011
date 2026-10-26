@@ -1,0 +1,68 @@
+{
+  "runId": "ELC1011-t2-revisao-corretude-mvolsatn",
+  "feature": "t2-revisao-corretude",
+  "agent": "antigravity",
+  "modo": "paralelo",
+  "paralelizar": null,
+  "modeloForcado": null,
+  "esforcoForcado": null,
+  "geradoEm": "2026-10-26 01:54",
+  "branchTrabalho": "spec/t2-revisao-corretude",
+  "baseDir": ".spec/features/t2-revisao-corretude",
+  "specDir": ".spec",
+  "repoName": "ELC1011",
+  "logsDir": "../onp-worktrees/ELC1011-t2-revisao-corretude-logs",
+  "ondas": [
+    [
+      "faixa-1",
+      "faixa-2"
+    ]
+  ],
+  "faixas": [
+    {
+      "id": "faixa-1",
+      "branch": "spec/t2-revisao-corretude-faixa-1",
+      "worktree": "../onp-worktrees/ELC1011-t2-revisao-corretude-faixa-1",
+      "tarefas": [
+        {
+          "id": "T-007",
+          "titulo": "Correção analítica da tabela de vem-uns da soma E = D + B em resolucao_q2.md",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "t2/docs/resolucao_q2.md"
+          ],
+          "refs": [
+            "US-005",
+            "AC-010"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faixa-2",
+      "branch": "spec/t2-revisao-corretude-faixa-2",
+      "worktree": "../onp-worktrees/ELC1011-t2-revisao-corretude-faixa-2",
+      "tarefas": [
+        {
+          "id": "T-008",
+          "titulo": "Expansão da suíte de testes com asserções detalhadas de vem-uns e conformidade",
+          "modelo": "claude-sonnet-5",
+          "esforco": "medium",
+          "arquivos": [
+            "t2/tests/trabalho2.test.js"
+          ],
+          "refs": [
+            "US-005",
+            "AC-009",
+            "AC-010",
+            "AC-011"
+          ]
+        }
+      ]
+    }
+  ],
+  "sequenciais": [],
+  "concluidas": [],
+  "avisos": []
+}

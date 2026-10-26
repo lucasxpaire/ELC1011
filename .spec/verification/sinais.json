@@ -95,10 +95,73 @@
       "codigo": "VERIFY_OBSOLETO",
       "feature": "t2-parte-01",
       "ref": "—",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-10-25T21:28:40.422Z",
-      "ultimaVez": "2026-10-25T21:28:40.423Z",
-      "gitRev": "1bf5725"
+      "ultimaVez": "2026-10-26T01:42:36.052Z",
+      "gitRev": "3a89a74"
+    },
+    "VERIFY_OBSOLETO::t2-padroes-codigo::—": {
+      "codigo": "VERIFY_OBSOLETO",
+      "feature": "t2-padroes-codigo",
+      "ref": "—",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-10-26T01:42:36.051Z",
+      "ultimaVez": "2026-10-26T01:42:36.052Z",
+      "gitRev": "3a89a74"
+    },
+    "ID_DUPLICADO::t2-revisao-corretude::ASM-001": {
+      "codigo": "ID_DUPLICADO",
+      "feature": "t2-revisao-corretude",
+      "ref": "ASM-001",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-10-26T01:46:47.670Z",
+      "ultimaVez": "2026-10-26T01:46:47.671Z",
+      "gitRev": "3a89a74"
+    },
+    "ID_DUPLICADO::t2-revisao-corretude::Q-001": {
+      "codigo": "ID_DUPLICADO",
+      "feature": "t2-revisao-corretude",
+      "ref": "Q-001",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-10-26T01:46:47.671Z",
+      "ultimaVez": "2026-10-26T01:46:47.671Z",
+      "gitRev": "3a89a74"
+    },
+    "ARQUIVO_INEXISTENTE::t2-revisao-corretude::T-001": {
+      "codigo": "ARQUIVO_INEXISTENTE",
+      "feature": "t2-revisao-corretude",
+      "ref": "T-001",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-10-26T01:46:47.671Z",
+      "ultimaVez": "2026-10-26T01:46:47.671Z",
+      "gitRev": "3a89a74"
+    },
+    "AC_SEM_TESTE::t2-revisao-corretude::AC-009": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "t2-revisao-corretude",
+      "ref": "AC-009",
+      "ocorrencias": 3,
+      "primeiraVez": "2026-10-26T01:46:47.671Z",
+      "ultimaVez": "2026-10-26T01:54:36.596Z",
+      "gitRev": "3a89a74"
+    },
+    "AC_SEM_TESTE::t2-revisao-corretude::AC-010": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "t2-revisao-corretude",
+      "ref": "AC-010",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-10-26T01:47:35.917Z",
+      "ultimaVez": "2026-10-26T01:54:36.597Z",
+      "gitRev": "3a89a74"
+    },
+    "AC_SEM_TESTE::t2-revisao-corretude::AC-011": {
+      "codigo": "AC_SEM_TESTE",
+      "feature": "t2-revisao-corretude",
+      "ref": "AC-011",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-10-26T01:47:35.917Z",
+      "ultimaVez": "2026-10-26T01:54:36.597Z",
+      "gitRev": "3a89a74"
     }
   }
 }

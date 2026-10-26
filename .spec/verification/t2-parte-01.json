@@ -1,7 +1,7 @@
 {
   "feature": "t2-parte-01",
-  "timestamp": "2026-10-25T21:28:50.883Z",
-  "gitRev": "1bf5725",
+  "timestamp": "2026-10-26T01:43:24.383Z",
+  "gitRev": "3a89a74",
   "command": "node --test --test-reporter=tap t2/tests/trabalho2.test.js",
   "reporter": "tap",
   "exitCode": 0,
