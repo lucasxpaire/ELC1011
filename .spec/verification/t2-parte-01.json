@@ -1,11 +1,11 @@
 {
   "feature": "t2-parte-01",
-  "timestamp": "2026-10-26T01:43:24.383Z",
-  "gitRev": "3a89a74",
+  "timestamp": "2026-10-26T02:04:44.952Z",
+  "gitRev": "d13374c",
   "command": "node --test --test-reporter=tap t2/tests/trabalho2.test.js",
   "reporter": "tap",
   "exitCode": 0,
-  "testsParsed": 8,
+  "testsParsed": 11,
   "results": {
     "AC-001": {
       "status": "pass",

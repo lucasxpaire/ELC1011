@@ -1,0 +1,27 @@
+{
+  "feature": "t2-revisao-corretude",
+  "timestamp": "2026-10-26T02:04:35.229Z",
+  "gitRev": "d13374c",
+  "command": "node --test --test-reporter=tap t2/tests/trabalho2.test.js",
+  "reporter": "tap",
+  "exitCode": 0,
+  "testsParsed": 11,
+  "results": {
+    "AC-009": {
+      "status": "pass",
+      "testName": "Validação de conformidade estrutural e convenções em q1.asm @spec:AC-009",
+      "method": "tap"
+    },
+    "AC-010": {
+      "status": "pass",
+      "testName": "Correção matemática e detalhamento dos vem-uns da soma E = D + B @spec:AC-010",
+      "method": "tap"
+    },
+    "AC-011": {
+      "status": "pass",
+      "testName": "Expansão dos testes automatizados com validação estrita de vem-uns e conformidade geral @spec:AC-011",
+      "method": "tap"
+    }
+  },
+  "principles": {}
+}
