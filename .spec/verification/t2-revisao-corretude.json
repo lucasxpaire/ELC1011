@@ -1,7 +1,7 @@
 {
   "feature": "t2-revisao-corretude",
-  "timestamp": "2026-10-26T02:04:35.229Z",
-  "gitRev": "d13374c",
+  "timestamp": "2026-10-26T02:05:50.210Z",
+  "gitRev": "38ad83a",
   "command": "node --test --test-reporter=tap t2/tests/trabalho2.test.js",
   "reporter": "tap",
   "exitCode": 0,

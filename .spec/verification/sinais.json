@@ -95,19 +95,19 @@
       "codigo": "VERIFY_OBSOLETO",
       "feature": "t2-parte-01",
       "ref": "—",
-      "ocorrencias": 2,
+      "ocorrencias": 3,
       "primeiraVez": "2026-10-25T21:28:40.422Z",
-      "ultimaVez": "2026-10-26T01:42:36.052Z",
-      "gitRev": "3a89a74"
+      "ultimaVez": "2026-10-26T02:05:39.934Z",
+      "gitRev": "38ad83a"
     },
     "VERIFY_OBSOLETO::t2-padroes-codigo::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "t2-padroes-codigo",
       "ref": "—",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-10-26T01:42:36.051Z",
-      "ultimaVez": "2026-10-26T01:42:36.052Z",
-      "gitRev": "3a89a74"
+      "ultimaVez": "2026-10-26T02:05:39.933Z",
+      "gitRev": "38ad83a"
     },
     "ID_DUPLICADO::t2-revisao-corretude::ASM-001": {
       "codigo": "ID_DUPLICADO",
@@ -162,6 +162,15 @@
       "primeiraVez": "2026-10-26T01:47:35.917Z",
       "ultimaVez": "2026-10-26T01:54:36.597Z",
       "gitRev": "3a89a74"
+    },
+    "VERIFY_OBSOLETO::t2-revisao-corretude::—": {
+      "codigo": "VERIFY_OBSOLETO",
+      "feature": "t2-revisao-corretude",
+      "ref": "—",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-10-26T02:05:39.934Z",
+      "ultimaVez": "2026-10-26T02:05:39.934Z",
+      "gitRev": "38ad83a"
     }
   }
 }
