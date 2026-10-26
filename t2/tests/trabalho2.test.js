@@ -133,3 +133,59 @@ test('Preservação da corretude funcional e execução no MARS @spec:AC-008', (
   const trimmed = output.trim();
   assert.equal(trimmed, 'O resultado e 17', 'A execução refatorada deve manter a impressão "O resultado e 17".');
 });
+
+// -----------------------------------------------------------------------------
+// Testes da Feature 3: t2-revisao-corretude
+// -----------------------------------------------------------------------------
+test('Validação de conformidade estrutural e convenções em q1.asm @spec:AC-009', () => {
+  assert.ok(existsSync(q1Asm), 'O arquivo t2/src/q1.asm deve existir.');
+  const content = readFileSync(q1Asm, 'utf-8');
+  assert.match(content, /\.globl\s+imprime_resultado/, 'Deve definir e expor .globl imprime_resultado.');
+  assert.match(content, /imprime_resultado:/, 'Deve conter o rótulo imprime_resultado:.');
+
+  const cmd = `java -jar "${marsJar}" nc sm "${q1Asm}"`;
+  const output = execSync(cmd, { cwd: rootDir, encoding: 'utf-8' });
+  assert.equal(output.trim(), 'O resultado e 17', 'A execução no MARS deve produzir exatamente "O resultado e 17".');
+});
+
+test('Correção matemática e detalhamento dos vem-uns da soma E = D + B @spec:AC-010', () => {
+  const dVal = 1448; // 1011010.1000_2 (-37.5)
+  const bVal = 164;  // 0001010.0100_2 (+10.25)
+  const aVal = 1612; // 1100100.1100_2 (-27.25)
+
+  const carries = new Array(12).fill(0);
+  let c = 0;
+  for (let i = 0; i < 11; i++) {
+    const bitD = (dVal >> i) & 1;
+    const bitB = (bVal >> i) & 1;
+    const sum = bitD + bitB + c;
+    c = sum >> 1;
+    carries[i + 1] = c;
+  }
+
+  assert.equal(carries[0], 0, 'c0 deve ser 0');
+  assert.equal(carries[1], 0, 'c1 deve ser 0');
+  assert.equal(carries[2], 0, 'c2 deve ser 0');
+  assert.equal(carries[3], 0, 'c3 deve ser 0');
+  assert.equal(carries[4], 0, 'c4 deve ser 0');
+  assert.equal(carries[5], 0, 'c5 deve ser 0');
+  assert.equal(carries[6], 1, 'c6 deve ser 1');
+  assert.equal(carries[7], 0, 'c7 deve ser 0');
+  assert.equal(carries[8], 1, 'c8 deve ser 1');
+  assert.equal(carries[9], 1, 'c9 deve ser 1');
+  assert.equal(carries[10], 0, 'c10 deve ser 0');
+  assert.equal(carries[11], 0, 'c11 deve ser 0');
+
+  const eVal = (dVal + bVal) & 0x7ff;
+  assert.equal(eVal, aVal, 'eVal = (dVal + bVal) & 0x7ff deve ser igual a aVal (1612)');
+  assert.equal(toSignedQ74(eVal), -27.25, 'Valor decimal de eVal deve ser -27.25');
+});
+
+test('Expansão dos testes automatizados com validação estrita de vem-uns e conformidade geral @spec:AC-011', () => {
+  const dVal = 1448;
+  const bVal = 164;
+  const eVal = (dVal + bVal) & 0x7ff;
+
+  assert.equal(formatQ74Binary(eVal), '1100100.1100', 'O formato binário de E deve ser 1100100.1100');
+  assert.equal(toSignedQ74(eVal), -27.25, 'O valor decimal de E deve ser -27.25');
+});
